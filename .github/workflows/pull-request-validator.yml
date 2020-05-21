@@ -1,0 +1,15 @@
+name: Pull Request Validation Workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: ['opened', 'edited', 'reopened', 'synchronize']
+
+jobs:
+  pull_request_validator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jamesnswithers/pull-request-validator-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

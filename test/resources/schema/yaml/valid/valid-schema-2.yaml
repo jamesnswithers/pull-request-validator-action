@@ -1,0 +1,12 @@
+checks:
+  title-fixer:
+    enforce-check: true
+    fixes:
+      - replace: 'Replace this'
+        with: 'With this'
+
+  title-validator:
+    matches:
+      - 'Match this'
+      - 'And this'
+    failure-message: 'Failed validation'
