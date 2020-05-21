@@ -1,0 +1,5 @@
+checks:
+  title-validator:
+    matches:
+      - 'Match this'
+    failure-message: 'Failed validation'

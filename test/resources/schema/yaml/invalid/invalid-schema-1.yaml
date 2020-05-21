@@ -1,0 +1,6 @@
+checks:
+  title-fixer:
+    enforce-check: 'untrue'
+    fixes:
+      - replace: 'Replace this'
+        with: 'With this'
