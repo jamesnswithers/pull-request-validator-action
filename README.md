@@ -1,3 +1,4 @@
+
 # Pull Request Validator GitHub Action
 
 This is a [Github Action](https://github.com/features/actions) that can validate the title of a pull request.
