@@ -8,6 +8,7 @@ on:
 
 jobs:
   pull_request_validator:
+    if: github.actor!= 'dependabot-preview[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: jamesnswithers/pull-request-validator-action@master
