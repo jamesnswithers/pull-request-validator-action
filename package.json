@@ -20,7 +20,7 @@
   "author": "James Withers",
   "homepage": "https://github.com/hd-it-development/pull-request-validator-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^2.2.0",
     "@hapi/joi": "^17.1.1",
     "codeowners-api": "^2.0.0",

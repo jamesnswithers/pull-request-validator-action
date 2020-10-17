@@ -3,6 +3,7 @@ checks:
     matches:
       - ^bug-.*
       - ^enhancement-.*
+      - ^Bump\s[\w\W]+\sfrom\s[0-9.]+\sto\s[0-9.]+
     failure-message: |2
       Pull Request Validation Failed. The pull request title should follow the below case-sensitive patterns
       * `bug-An optional small summary title`
