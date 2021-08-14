@@ -116,7 +116,6 @@ const _ = __importStar(__nccwpck_require__(250));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
-const statusStates_1 = __nccwpck_require__(9203);
 const validateTitle_1 = __nccwpck_require__(3835);
 const eventTypes = ['pull_request'];
 const actionsToCheckTitle = ['opened', 'reopened', 'edited', 'synchronize'];
@@ -139,11 +138,9 @@ function run() {
         if (_.hasIn(config, 'checks.title-validator')) {
             const pullRequestTitle = payload.pull_request.title;
             const titleCheckState = yield validateTitle_1.isTitleValid(pullRequestTitle, _.get(config, 'checks.title-validator.matches'));
-            gitHubClient.repos.createStatus(Object.assign(Object.assign({}, github.context.repo), {
-                sha: pullRequestSha,
-                state: titleCheckState ? statusStates_1.StatusStates.success : statusStates_1.StatusStates.failure,
-                context: 'pull-request-validator/title/validation'
-            }));
+            if (!titleCheckState) {
+                core.setFailed("Pull Request Title Validation Failed");
+            }
             if (!titleCheckState && _.hasIn(config, 'checks.title-validator.failure-message')) {
                 gitHubClient.issues.createComment(Object.assign(Object.assign({}, github.context.repo), {
                     issue_number: payload.pull_request.number,
@@ -154,23 +151,6 @@ function run() {
     });
 }
 run();
-
-
-/***/ }),
-
-/***/ 9203:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-var StatusStates;
-(function (StatusStates) {
-    StatusStates["success"] = "success";
-    StatusStates["error"] = "error";
-    StatusStates["failure"] = "failure";
-    StatusStates["pending"] = "pending";
-})(StatusStates = exports.StatusStates || (exports.StatusStates = {}));
 
 
 /***/ }),
