@@ -2,7 +2,7 @@ name: 'Pull Request Validator Action'
 description: 'Pull Request Title Validator'
 author: 'jamesnswithers'
 runs:
-  using: 'node14'
+  using: 'node12'
   main: 'dist/index.js'
 inputs:
   github-token:
