@@ -1,9 +1,9 @@
-name: Pull Request Validator Action'
-description: 'Pull Request Validator for testing'
+name: 'Pull Request Validator Action'
+description: 'Pull Request Title Validator'
 author: 'jamesnswithers'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'dist/index.js'
 inputs:
   github-token:
     description: Token for the GitHub API.

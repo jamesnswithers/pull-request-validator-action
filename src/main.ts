@@ -29,16 +29,9 @@ async function run() {
   if (_.hasIn(config , 'checks.title-validator')) {
     const pullRequestTitle = payload!.pull_request!.title;
     const titleCheckState = await isTitleValid(pullRequestTitle, _.get(config, 'checks.title-validator.matches'));
-    gitHubClient.repos.createStatus(
-      Object.assign(
-        Object.assign({}, github.context.repo),
-        {
-          sha: pullRequestSha,
-          state: titleCheckState ? StatusStates.success : StatusStates.failure,
-          context: 'pull-request-validator/title/validation'
-        }
-      )
-    );
+    if (!titleCheckState) {
+      core.setFailed("Pull Request Title Validation Failed")
+    }
     if (!titleCheckState &&  _.hasIn(config , 'checks.title-validator.failure-message')) {
       gitHubClient.issues.createComment(
         Object.assign(

@@ -1,12 +1,12 @@
 checks:
   title-validator:
     matches:
-      - ^bug-.*
-      - ^enhancement-.*
+      - ^\(bug\) .*
+      - ^\(enhancement\) .*
       - ^Bump\s[\w\W]+\sfrom\s[0-9.]+\sto\s[0-9.]+
     failure-message: |2
       Pull Request Validation Failed. The pull request title should follow the below case-sensitive patterns
-      * `bug-An optional small summary title`
-      * `enhancement-An optional small summary title`
-      * `Revert "bug-An optional small summary title"`
-      * `Revert "enhancement-An optional small summary title"`
+      * `(bug) An optional small summary title`
+      * `(enhancement) An optional small summary title`
+      * `Revert "(bug) An optional small summary title"`
+      * `Revert "(enhancement) An optional small summary title"`

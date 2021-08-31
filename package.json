@@ -5,12 +5,13 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
+    "gh-compile": "ncc build lib/main.js --license licenses.txt",
     "test": "jest",
     "format": "prettier --write src/*.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hd-it-development/pull-request-validator-action.git"
+    "url": "git+https://github.com/jamesnswithersr/pull-request-validator-action.git"
   },
   "keywords": [
     "actions",
@@ -23,9 +24,10 @@
     "@actions/core": "^1.2.6",
     "@actions/github": "^2.2.0",
     "@hapi/joi": "^17.1.1",
+    "@vercel/ncc": "^0.29.1",
     "codeowners-api": "^2.0.0",
     "js-yaml": "^3.13.1",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/jest": "^25.2.2",
