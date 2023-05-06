@@ -1,6 +1,7 @@
 name: Pull Request Validation Workflow
 
 permissions:
+  pull-requests: write
   issues: write
 
 on:
