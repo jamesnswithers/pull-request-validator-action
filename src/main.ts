@@ -9,7 +9,7 @@ const eventTypes = ['pull_request'];
 
 async function run() {
   const github_token = core.getInput('github-token', { required: true });
-  const systemTest = core.getInput('system-test', { required: false });
+  const systemTest = core.getBooleanInput('system-test', { required: false });
   const gitHubClient = new github.GitHub(github_token);
   const config = await getConfig(gitHubClient);
   const context = github!.context;
@@ -22,7 +22,7 @@ async function run() {
     return;
   }
   core.info('The action is: ' + action);
-  core.info('is a system test: ' + systemTest);
+  core.info('Is a system test: ' + systemTest);
 
   if (_.hasIn(config , 'checks.title-validator')) {
     const pullRequestTitle = payload!.pull_request!.title;
