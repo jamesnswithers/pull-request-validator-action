@@ -28,12 +28,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-  system_test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run build
       - run: npm run gh-compile
       - uses: ./
         with:
