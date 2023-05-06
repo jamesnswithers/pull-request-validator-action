@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jamesnswithersr/pull-request-validator-action.git"
+    "url": "git+https://github.com/jamesnswithers/pull-request-validator-action.git"
   },
   "keywords": [
     "actions",
@@ -19,7 +19,7 @@
     "validate"
   ],
   "author": "James Withers",
-  "homepage": "https://github.com/hd-it-development/pull-request-validator-action#readme",
+  "homepage": "https://github.com/jamesnswithers/pull-request-validator-action#readme",
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@actions/github": "^2.2.0",
