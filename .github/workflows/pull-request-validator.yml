@@ -1,8 +1,5 @@
 name: Pull Request Validation Workflow
 
-permissions:
-  pull-requests: write
-
 on:
   pull_request:
     branches:
@@ -12,7 +9,22 @@ on:
 jobs:
   pull_request_validator:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: jamesnswithers/pull-request-validator-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    env:
+      node_version: '16.x'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ env.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node_version }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
