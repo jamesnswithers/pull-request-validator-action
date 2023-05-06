@@ -28,3 +28,11 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
+  system-test:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
