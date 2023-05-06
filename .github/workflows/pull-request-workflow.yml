@@ -1,4 +1,4 @@
-name: Pull Request Validation Workflow
+name: Pull Request Workflow
 
 on:
   pull_request:
