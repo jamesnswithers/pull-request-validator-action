@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+
 import { getConfig } from "./config";
-import { StatusStates } from "./statusStates";
 import { isTitleValid } from "./validateTitle";
 
 const eventTypes = ['pull_request'];
