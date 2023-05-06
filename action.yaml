@@ -8,6 +8,9 @@ inputs:
   github-token:
     description: Token for the GitHub API.
     required: true
+  system-test:
+    description: Used to automate testing of PR.
+    required: false
 branding:
   icon: 'edit-3'
   color: 'blue'

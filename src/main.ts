@@ -22,6 +22,7 @@ async function run() {
     return;
   }
   core.info('The action is: ' + action);
+  core.info('is a system test: ' + systemTest);
 
   if (_.hasIn(config , 'checks.title-validator')) {
     const pullRequestTitle = payload!.pull_request!.title;
