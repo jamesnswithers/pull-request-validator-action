@@ -11,6 +11,7 @@ inputs:
   system-test:
     description: Used to automate testing of PR.
     required: false
+    default: false
 branding:
   icon: 'edit-3'
   color: 'blue'
