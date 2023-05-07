@@ -21,7 +21,6 @@ async function run() {
     core.info('The payload type is not one of pull_request or pull_request_review. Exiting early.');
     return;
   }
-  
   core.info('The action is: ' + action);
   core.info('Is a system test: ' + systemTest);
 
