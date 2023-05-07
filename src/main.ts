@@ -9,6 +9,7 @@ const eventTypes = ['pull_request'];
 
 async function run() {
   const github_token = core.getInput('github-token', { required: true });
+  const systemTest = core.getBooleanInput('system-test', { required: false });
   const gitHubClient = new github.GitHub(github_token);
   const config = await getConfig(gitHubClient);
   const context = github!.context;
@@ -21,14 +22,15 @@ async function run() {
     return;
   }
   core.info('The action is: ' + action);
+  core.info('Is a system test: ' + systemTest);
 
   if (_.hasIn(config , 'checks.title-validator')) {
     const pullRequestTitle = payload!.pull_request!.title;
     const titleCheckState = isTitleValid(pullRequestTitle, _.get(config, 'checks.title-validator.matches'));
-    if (!titleCheckState) {
+    if (!systemTest && !titleCheckState) {
       core.setFailed("Pull Request Title Validation Failed")
     }
-    if (!titleCheckState &&  _.hasIn(config , 'checks.title-validator.failure-message')) {
+    if (!systemTest && !titleCheckState &&  _.hasIn(config , 'checks.title-validator.failure-message')) {
       gitHubClient.issues.createComment(
         Object.assign(
           Object.assign({}, github.context.repo),
