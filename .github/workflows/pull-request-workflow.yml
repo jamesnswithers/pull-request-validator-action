@@ -9,7 +9,7 @@ on:
 
 jobs:
   pull_request_validator:
-    namwe: Pull Request Validator
+    name: Pull Request Validator
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
