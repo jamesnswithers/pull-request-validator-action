@@ -13,7 +13,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-    - uses: jamesnswithers/pull-request-validator-action@master
+    - uses: jamesnswithers/pull-request-validator-action@release/v2-full-update
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
   build:
