@@ -40,12 +40,13 @@ async function run() {
       !titleCheckState &&
       _.hasIn(config, "checks.title-validator.failure-message")
     ) {
-      octokit.rest.issues.createComment(
-        Object.assign(Object.assign({}, github.context.repo), {
-          issue_number: payload!.pull_request!.number,
-          body: _.get(config, "checks.title-validator.failure-message"),
-        }),
-      );
+      core.error(_.get(config, "checks.title-validator.failure-message"));
+      // octokit.rest.issues.createComment(
+      //   Object.assign(Object.assign({}, github.context.repo), {
+      //     issue_number: payload!.pull_request!.number,
+      //     body: _.get(config, "checks.title-validator.failure-message"),
+      //   }),
+      // );
     }
   }
 }
