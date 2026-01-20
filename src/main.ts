@@ -48,10 +48,6 @@ async function run() {
         core.info(line);
         core.summary.addRaw(line, true);
       });
-      failureMessage.split('\r\n').forEach(line => {
-        core.info(line);
-        core.summary.addRaw(line, true);
-      });
       core.summary.write();
       // octokit.rest.issues.createComment(
       //   Object.assign(Object.assign({}, github.context.repo), {
