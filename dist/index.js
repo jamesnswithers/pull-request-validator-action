@@ -176,19 +176,22 @@ function run() {
         if (_.hasIn(config, "checks.title-validator")) {
             const pullRequestTitle = payload.pull_request.title;
             const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, _.get(config, "checks.title-validator.matches"));
-            if (!systemTest && !titleCheckState) {
-                core.setFailed("Pull Request Title Validation Failed");
-            }
             if (!systemTest &&
                 !titleCheckState &&
                 _.hasIn(config, "checks.title-validator.failure-message")) {
                 core.error(_.get(config, "checks.title-validator.failure-message"));
+                core.summary.addHeading('Pull Request Title Validation Failed', '2');
+                core.summary.addRaw(_.get(config, "checks.title-validator.failure-message"), true);
+                core.summary.write();
                 // octokit.rest.issues.createComment(
                 //   Object.assign(Object.assign({}, github.context.repo), {
                 //     issue_number: payload!.pull_request!.number,
                 //     body: _.get(config, "checks.title-validator.failure-message"),
                 //   }),
                 // );
+            }
+            else if (!systemTest && !titleCheckState) {
+                core.setFailed("Pull Request Title Validation Failed");
             }
         }
     });
