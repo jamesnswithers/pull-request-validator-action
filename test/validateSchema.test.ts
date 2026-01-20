@@ -11,7 +11,7 @@ describe('schema', () => {
     validSchemas.forEach(([schemaName, schemaMatch]) => {
       const file = VALID_TEST_RESOURCES + '/' + schemaName + '.yaml';
       test(`${file} is valid`, () => {
-        const { error, value } = schema.validate(yaml.safeLoad(fs.readFileSync(file, 'utf8')), {
+        const { error, value } = schema.validate(yaml.load(fs.readFileSync(file, 'utf8')), {
           abortEarly: false
         });
         expect(error).toBeUndefined();
@@ -26,7 +26,7 @@ describe('schema', () => {
     invalidSchemas.forEach(([schemaName, schemaError]) => {
       const file = INVALID_TEST_RESOURCES + '/' + schemaName + '.yaml';
       test(`${file} is invalid`, () => {
-        const { error, value } = schema.validate(yaml.safeLoad(fs.readFileSync(file, 'utf8')), {
+        const { error, value } = schema.validate(yaml.load(fs.readFileSync(file, 'utf8')), {
           abortEarly: false
         });
         expect(error && error.toString()).toMatch(schemaError);

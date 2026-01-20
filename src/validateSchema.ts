@@ -1,32 +1,32 @@
-import * as Joi from '@hapi/joi';
+import * as Joi from "joi";
 
 export const schema = Joi.object().keys({
-  'checks': Joi.object().keys({
-    'title-fixer': Joi.object().keys({
-      'enforce-check': Joi.boolean().default(false).strict(),
-      'fixes': Joi.array().items(
+  checks: Joi.object().keys({
+    "title-fixer": Joi.object().keys({
+      "enforce-check": Joi.boolean().default(false).strict(),
+      fixes: Joi.array().items(
         Joi.object().keys({
-          'replace': Joi.string().required(),
-          'with': Joi.string().allow('').required()
-        })
-      )
-     }),
-
-    'title-validator': Joi.object().keys({
-      'matches': Joi.array().items(Joi.string()).single().default([]),
-      'failure-message': Joi.string().required(),
+          replace: Joi.string().required(),
+          with: Joi.string().allow("").required(),
+        }),
+      ),
     }),
 
-    'codeowner': Joi.object().keys({
-      'enforce-multiple': Joi.boolean().default(false)
-    })
-  })
+    "title-validator": Joi.object().keys({
+      matches: Joi.array().items(Joi.string()).single().default([]),
+      "failure-message": Joi.string().required(),
+    }),
+
+    codeowner: Joi.object().keys({
+      "enforce-multiple": Joi.boolean().default(false),
+    }),
+  }),
 });
 
-export const validateSchema = config => {
+export const validateSchema = (config) => {
   const { error, value: validatedConfig } = schema.validate(config, {
     abortEarly: false,
-    allowUnknown: true
+    allowUnknown: true,
   });
 
   if (error) {
@@ -34,4 +34,4 @@ export const validateSchema = config => {
   }
 
   return validatedConfig;
-}
+};

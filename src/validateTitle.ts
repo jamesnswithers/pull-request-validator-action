@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
 /**
  * Tests if the Pull Request title is valid, against the configuration provided
@@ -9,8 +9,8 @@ import * as _ from 'lodash';
  */
 export function isTitleValid(title: string, matches: object): boolean {
   let titleValidated = false;
-  _.forEach(matches, function(titleValidation: string | RegExp) {
-    if (title.match(new RegExp(titleValidation, 'g'))) {
+  _.forEach(matches, function (titleValidation: string | RegExp) {
+    if (title.match(new RegExp(titleValidation, "g"))) {
       titleValidated = true;
     }
   });
