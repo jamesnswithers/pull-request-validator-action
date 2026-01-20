@@ -43,11 +43,7 @@ async function run() {
       //core.error(_.get(config, "checks.title-validator.failure-message"));
       core.summary.addHeading('Pull Request Title Validation Failed', '2');
       core.summary.addEOL();
-      const failureMessage = _.get(config, "checks.title-validator.failure-message");
-      failureMessage.split('\n').forEach(line => {
-        core.info(line);
-        core.summary.addRaw(line, true);
-      });
+      core.summary.addRaw(_.get(config, "checks.title-validator.failure-message"), true);
       core.summary.write();
       // octokit.rest.issues.createComment(
       //   Object.assign(Object.assign({}, github.context.repo), {
