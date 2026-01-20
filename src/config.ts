@@ -21,7 +21,7 @@ async function loadYaml(octokit, params) {
       return;
     }
     return (
-      yaml.load(Buffer.from(response.data.content, "base64").toString()) || {}
+      yaml.load(Buffer.from(response.data.content, "base64").toString('utf-8')) || {}
     );
   } catch (e) {
     if (e instanceof RequestError && e.status === 404) {

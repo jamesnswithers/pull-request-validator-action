@@ -44,6 +44,11 @@ async function run() {
       core.summary.addHeading('Pull Request Title Validation Failed', '2');
       const failureMessage = _.get(config, "checks.title-validator.failure-message");
       failureMessage.split('\r\n').forEach(line => {
+        core.info(line);
+        core.summary.addRaw(line, true);
+      });
+      failureMessage.split('\n').forEach(line => {
+        core.info(line);
         core.summary.addRaw(line, true);
       });
       core.summary.write();

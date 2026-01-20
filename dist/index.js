@@ -70,7 +70,7 @@ function loadYaml(octokit, params) {
             if (typeof response.data.content !== "string") {
                 return;
             }
-            return (yaml.load(Buffer.from(response.data.content, "base64").toString()) || {});
+            return (yaml.load(Buffer.from(response.data.content, "base64").toString('utf-8')) || {});
         }
         catch (e) {
             if (e instanceof request_error_1.RequestError && e.status === 404) {
@@ -186,6 +186,11 @@ function run() {
                 core.summary.addHeading('Pull Request Title Validation Failed', '2');
                 const failureMessage = _.get(config, "checks.title-validator.failure-message");
                 failureMessage.split('\r\n').forEach(line => {
+                    core.info(line);
+                    core.summary.addRaw(line, true);
+                });
+                failureMessage.split('\n').forEach(line => {
+                    core.info(line);
                     core.summary.addRaw(line, true);
                 });
                 core.summary.write();
