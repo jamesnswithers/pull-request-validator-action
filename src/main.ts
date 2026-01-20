@@ -32,6 +32,9 @@ async function run() {
       pullRequestTitle,
       _.get(config, "checks.title-validator.matches"),
     );
+    if (!systemTest && !titleCheckState) {
+      core.setFailed("Pull Request Title Validation Failed");
+    }
     if (
       !systemTest &&
       !titleCheckState &&
@@ -40,6 +43,9 @@ async function run() {
       core.error(_.get(config, "checks.title-validator.failure-message"));
       core.summary.addHeading('Pull Request Title Validation Failed', '2');
       core.summary.addRaw(_.get(config, "checks.title-validator.failure-message"), true);
+      core.summary.addEOL()
+      core.summary.addRaw("* test item 1", true);
+      core.summary.addRaw("* test item 2", true);
       core.summary.write();
       // octokit.rest.issues.createComment(
       //   Object.assign(Object.assign({}, github.context.repo), {
@@ -47,8 +53,6 @@ async function run() {
       //     body: _.get(config, "checks.title-validator.failure-message"),
       //   }),
       // );
-    } else if (!systemTest && !titleCheckState) {
-      core.setFailed("Pull Request Title Validation Failed");
     }
   }
 }
