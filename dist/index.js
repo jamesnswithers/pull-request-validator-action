@@ -54,7 +54,7 @@ const github = __importStar(__nccwpck_require__(3228));
 const request_error_1 = __nccwpck_require__(3708);
 const yaml = __importStar(__nccwpck_require__(4281));
 const validateSchema_1 = __nccwpck_require__(9719);
-const CONFIG_FILE = '.github/pull-request-validator-config.yaml';
+const CONFIG_FILE = ".github/pull-request-validator-config.yaml";
 /**
  * Loads a file from GitHub
  *
@@ -66,11 +66,11 @@ const CONFIG_FILE = '.github/pull-request-validator-config.yaml';
 function loadYaml(octokit, params) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield octokit.rest.repos.getContents(params);
-            if (typeof response.data.content !== 'string') {
+            const response = yield octokit.rest.repos.getContent(params);
+            if (typeof response.data.content !== "string") {
                 return;
             }
-            return yaml.load(Buffer.from(response.data.content, 'base64').toString()) || {};
+            return (yaml.load(Buffer.from(response.data.content, "base64").toString()) || {});
         }
         catch (e) {
             if (e instanceof request_error_1.RequestError && e.status === 404) {
@@ -92,7 +92,9 @@ function loadYaml(octokit, params) {
  */
 function getConfig(octokit) {
     return __awaiter(this, void 0, void 0, function* () {
-        const params = Object.assign(Object.assign({}, github.context.repo), { path: CONFIG_FILE });
+        const params = Object.assign(Object.assign({}, github.context.repo), {
+            path: CONFIG_FILE,
+        });
         const yamlConfig = yield loadYaml(octokit, params);
         return (0, validateSchema_1.validateSchema)(yamlConfig);
     });
@@ -154,34 +156,39 @@ const core = __importStar(__nccwpck_require__(7484));
 const github = __importStar(__nccwpck_require__(3228));
 const config_1 = __nccwpck_require__(6472);
 const validateTitle_1 = __nccwpck_require__(3780);
-const eventTypes = ['pull_request'];
+const eventTypes = ["pull_request"];
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const githubToken = core.getInput('github-token', { required: true });
-        const systemTest = core.getBooleanInput('system-test', { required: false });
+        const githubToken = core.getInput("github-token", { required: true });
+        const systemTest = core.getBooleanInput("system-test", { required: false });
         const octokit = github.getOctokit(githubToken);
         const config = yield (0, config_1.getConfig)(octokit);
         const context = github.context;
         const payload = context.payload;
-        const action = payload.action || '';
-        core.info('The event type is: ' + context.eventName);
+        const action = payload.action || "";
+        core.info("The event type is: " + context.eventName);
         if (!_.includes(eventTypes, context.eventName)) {
-            core.info('The payload type is not one of pull_request or pull_request_review. Exiting early.');
+            core.info("The payload type is not one of pull_request or pull_request_review. Exiting early.");
             return;
         }
-        core.info('The action is: ' + action);
-        core.info('Is a system test: ' + systemTest);
-        if (_.hasIn(config, 'checks.title-validator')) {
+        core.info("The action is: " + action);
+        core.info("Is a system test: " + systemTest);
+        if (_.hasIn(config, "checks.title-validator")) {
             const pullRequestTitle = payload.pull_request.title;
-            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, _.get(config, 'checks.title-validator.matches'));
+            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, _.get(config, "checks.title-validator.matches"));
             if (!systemTest && !titleCheckState) {
                 core.setFailed("Pull Request Title Validation Failed");
             }
-            if (!systemTest && !titleCheckState && _.hasIn(config, 'checks.title-validator.failure-message')) {
-                octokit.rest.issues.createComment(Object.assign(Object.assign({}, github.context.repo), {
-                    issue_number: payload.pull_request.number,
-                    body: _.get(config, 'checks.title-validator.failure-message')
-                }));
+            if (!systemTest &&
+                !titleCheckState &&
+                _.hasIn(config, "checks.title-validator.failure-message")) {
+                core.error(_.get(config, "checks.title-validator.failure-message"));
+                // octokit.rest.issues.createComment(
+                //   Object.assign(Object.assign({}, github.context.repo), {
+                //     issue_number: payload!.pull_request!.number,
+                //     body: _.get(config, "checks.title-validator.failure-message"),
+                //   }),
+                // );
             }
         }
     });
@@ -233,27 +240,27 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateSchema = exports.schema = void 0;
 const Joi = __importStar(__nccwpck_require__(1154));
 exports.schema = Joi.object().keys({
-    'checks': Joi.object().keys({
-        'title-fixer': Joi.object().keys({
-            'enforce-check': Joi.boolean().default(false).strict(),
-            'fixes': Joi.array().items(Joi.object().keys({
-                'replace': Joi.string().required(),
-                'with': Joi.string().allow('').required()
-            }))
+    checks: Joi.object().keys({
+        "title-fixer": Joi.object().keys({
+            "enforce-check": Joi.boolean().default(false).strict(),
+            fixes: Joi.array().items(Joi.object().keys({
+                replace: Joi.string().required(),
+                with: Joi.string().allow("").required(),
+            })),
         }),
-        'title-validator': Joi.object().keys({
-            'matches': Joi.array().items(Joi.string()).single().default([]),
-            'failure-message': Joi.string().required(),
+        "title-validator": Joi.object().keys({
+            matches: Joi.array().items(Joi.string()).single().default([]),
+            "failure-message": Joi.string().required(),
         }),
-        'codeowner': Joi.object().keys({
-            'enforce-multiple': Joi.boolean().default(false)
-        })
-    })
+        codeowner: Joi.object().keys({
+            "enforce-multiple": Joi.boolean().default(false),
+        }),
+    }),
 });
-const validateSchema = config => {
+const validateSchema = (config) => {
     const { error, value: validatedConfig } = exports.schema.validate(config, {
         abortEarly: false,
-        allowUnknown: true
+        allowUnknown: true,
     });
     if (error) {
         throw error;
@@ -316,7 +323,7 @@ const _ = __importStar(__nccwpck_require__(2356));
 function isTitleValid(title, matches) {
     let titleValidated = false;
     _.forEach(matches, function (titleValidation) {
-        if (title.match(new RegExp(titleValidation, 'g'))) {
+        if (title.match(new RegExp(titleValidation, "g"))) {
             titleValidated = true;
         }
     });
