@@ -15,7 +15,7 @@ const CONFIG_FILE = ".github/pull-request-validator-config.yaml";
  */
 async function loadYaml(octokit, params) {
   try {
-    const response = await octokit.rest.repos.getContents(params);
+    const response = await octokit.rest.repos.getContent(params);
 
     if (typeof response.data.content !== "string") {
       return;
