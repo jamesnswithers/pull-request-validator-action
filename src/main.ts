@@ -50,7 +50,7 @@ async function run() {
     ...context.repo,
     issue_number: payload!.pull_request!.number,
   });
-  const existingComment = comments.find((comment) => comment.body?.includes("Pull Request Title Validation Failed"));
+  const existingComment = comments.find((comment) => comment.body?.startsWith("Pull Request Title Validation"));
   core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
   core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
 
@@ -87,7 +87,12 @@ async function run() {
           body: core.summary.stringify(),
         });
       }
-
+    } else if (!systemTest && titleCheckState && existingComment) {
+      core.info("Title is valid. Deleting existing comment with id: " + existingComment.id);
+      octokit.rest.issues.deleteComment({
+        ...github.context.repo,
+        comment_id: existingComment.id!,
+      });
     }
   }
 }

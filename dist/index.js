@@ -179,7 +179,7 @@ function run() {
         const numberOfComments = payload.pull_request.comments;
         core.info("The pull request has " + numberOfComments + " comments.");
         const { data: comments } = yield octokit.rest.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: payload.pull_request.number }));
-        const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.includes("Pull Request Title Validation Failed"); });
+        const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.startsWith("Pull Request Title Validation"); });
         core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
         core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
         if (_.hasIn(config, "checks.title-validator")) {
@@ -205,6 +205,10 @@ function run() {
                     core.info("Updating existing comment with id: " + existingComment.id);
                     octokit.rest.issues.updateComment(Object.assign(Object.assign({}, github.context.repo), { comment_id: existingComment.id, body: core.summary.stringify() }));
                 }
+            }
+            else if (!systemTest && titleCheckState && existingComment) {
+                core.info("Title is valid. Deleting existing comment with id: " + existingComment.id);
+                octokit.rest.issues.deleteComment(Object.assign(Object.assign({}, github.context.repo), { comment_id: existingComment.id }));
             }
         }
     });
