@@ -163,6 +163,9 @@ function run() {
         const systemTest = core.getBooleanInput("system-test", { required: false });
         const octokit = github.getOctokit(githubToken);
         const config = yield (0, config_1.getConfig)(octokit);
+        const commentOnFailure = _.get(config, "checks.title-validator.comment-on-failure", true);
+        const jobSummaryOnFailure = _.get(config, "checks.title-validator.job-summary-on-failure", false);
+        const failureMessage = _.get(config, "checks.title-validator.failure-message", "Pull Request Title Validation Failed.");
         const context = github.context;
         const payload = context.payload;
         const action = payload.action || "";
@@ -173,26 +176,35 @@ function run() {
         }
         core.info("The action is: " + action);
         core.info("Is a system test: " + systemTest);
+        const numberOfComments = payload.pull_request.comments;
+        core.info("The pull request has " + numberOfComments + " comments.");
+        const { data: comments } = yield octokit.rest.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: payload.pull_request.number }));
+        const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.includes("Pull Request Title Validation Failed"); });
+        core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
+        core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
         if (_.hasIn(config, "checks.title-validator")) {
             const pullRequestTitle = payload.pull_request.title;
             const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, _.get(config, "checks.title-validator.matches"));
             if (!systemTest && !titleCheckState) {
                 core.setFailed("Pull Request Title Validation Failed");
-            }
-            if (!systemTest &&
-                !titleCheckState &&
-                _.hasIn(config, "checks.title-validator.failure-message")) {
-                //core.error(_.get(config, "checks.title-validator.failure-message"));
                 core.summary.addHeading('Pull Request Title Validation Failed', '2');
                 core.summary.addEOL();
-                core.summary.addRaw(_.get(config, "checks.title-validator.failure-message"), true);
-                core.summary.write();
-                // octokit.rest.issues.createComment(
-                //   Object.assign(Object.assign({}, github.context.repo), {
-                //     issue_number: payload!.pull_request!.number,
-                //     body: _.get(config, "checks.title-validator.failure-message"),
-                //   }),
-                // );
+                core.summary.addRaw("PR Title Supplied: " + pullRequestTitle, false);
+                core.summary.addEOL();
+                core.summary.addRaw(failureMessage, true);
+                if (jobSummaryOnFailure) {
+                    core.summary.write();
+                }
+                if (commentOnFailure && !existingComment) {
+                    octokit.rest.issues.createComment(Object.assign(Object.assign({}, github.context.repo), {
+                        issue_number: payload.pull_request.number,
+                        body: core.summary.stringify(),
+                    }));
+                }
+                else if (commentOnFailure && existingComment) {
+                    core.info("Updating existing comment with id: " + existingComment.id);
+                    octokit.rest.issues.updateComment(Object.assign(Object.assign({}, github.context.repo), { comment_id: existingComment.id, body: core.summary.stringify() }));
+                }
             }
         }
     });
