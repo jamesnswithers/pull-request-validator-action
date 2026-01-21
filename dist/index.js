@@ -179,7 +179,7 @@ function run() {
         const numberOfComments = payload.pull_request.comments;
         core.info("The pull request has " + numberOfComments + " comments.");
         const { data: comments } = yield octokit.rest.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: payload.pull_request.number }));
-        const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.startsWith("Pull Request Title Validation"); });
+        const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.includes("Pull Request Title Validation"); });
         core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
         core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
         if (_.hasIn(config, "checks.title-validator")) {

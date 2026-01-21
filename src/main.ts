@@ -50,7 +50,7 @@ async function run() {
     ...context.repo,
     issue_number: payload!.pull_request!.number,
   });
-  const existingComment = comments.find((comment) => comment.body?.startsWith("Pull Request Title Validation"));
+  const existingComment = comments.find((comment) => comment.body?.includes("Pull Request Title Validation"));
   core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
   core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
 
