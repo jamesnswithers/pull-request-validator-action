@@ -189,7 +189,7 @@ function run() {
                 core.setFailed("Pull Request Title Validation Failed");
                 core.summary.addHeading('Pull Request Title Validation Failed', '2');
                 core.summary.addEOL();
-                core.summary.addRaw("PR Title Supplied: " + pullRequestTitle, false);
+                core.summary.addQuote('PR Title Supplied: ' + pullRequestTitle, 'Current PR Title');
                 core.summary.addEOL();
                 core.summary.addRaw(failureMessage, true);
                 if (jobSummaryOnFailure) {
