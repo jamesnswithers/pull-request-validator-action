@@ -108,39 +108,6 @@ function getConfig(octokit) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -150,65 +117,69 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const _ = __importStar(__nccwpck_require__(2356));
-const core = __importStar(__nccwpck_require__(7484));
-const github = __importStar(__nccwpck_require__(3228));
+const lodash_1 = __importDefault(__nccwpck_require__(2356));
+const core_1 = __importDefault(__nccwpck_require__(7484));
+const github_1 = __importDefault(__nccwpck_require__(3228));
 const config_1 = __nccwpck_require__(6472);
 const validateTitle_1 = __nccwpck_require__(3780);
 const eventTypes = ["pull_request"];
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const githubToken = core.getInput("github-token", { required: true });
-        const systemTest = core.getBooleanInput("system-test", { required: false });
-        const octokit = github.getOctokit(githubToken);
-        const config = yield (0, config_1.getConfig)(octokit);
-        const commentOnFailure = _.get(config, "checks.title-validator.comment-on-failure", true);
-        const jobSummaryOnFailure = _.get(config, "checks.title-validator.job-summary-on-failure", false);
-        const failureMessage = _.get(config, "checks.title-validator.failure-message", "Pull Request Title Validation Failed.");
-        const context = github.context;
+        const context = github_1.default.context;
         const payload = context.payload;
         const action = payload.action || "";
-        core.info("The event type is: " + context.eventName);
-        if (!_.includes(eventTypes, context.eventName)) {
-            core.info("The payload type is not one of pull_request or pull_request_review. Exiting early.");
+        core_1.default.info(`The event type is: ${context.eventName}`);
+        if (!eventTypes.includes(context.eventName)) {
+            core_1.default.info("The payload type is not one of pull_request or pull_request_review. Exiting early.");
             return;
         }
-        core.info("The action is: " + action);
-        core.info("Is a system test: " + systemTest);
+        if (!payload.pull_request) {
+            core_1.default.info("The payload does not contain pull request information. Exiting early.");
+            return;
+        }
+        const githubToken = core_1.default.getInput("github-token", { required: true });
+        const systemTest = core_1.default.getBooleanInput("system-test", { required: false });
+        const octokit = github_1.default.getOctokit(githubToken);
+        const config = yield (0, config_1.getConfig)(octokit);
+        const commentOnFailure = lodash_1.default.get(config, "checks.title-validator.comment-on-failure", true);
+        const jobSummaryOnFailure = lodash_1.default.get(config, "checks.title-validator.job-summary-on-failure", false);
+        const failureMessage = lodash_1.default.get(config, "checks.title-validator.failure-message", "Pull Request Title Validation Failed.");
+        core_1.default.info(`The action is: ${action}`);
+        core_1.default.info(`Is a system test: ${systemTest}`);
         const numberOfComments = payload.pull_request.comments;
-        core.info("The pull request has " + numberOfComments + " comments.");
+        core_1.default.info(`The pull request has ${numberOfComments} comments.`);
         const { data: comments } = yield octokit.rest.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: payload.pull_request.number }));
         const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.includes("Pull Request Title Validation"); });
-        core.info("Existing comment found: " + (existingComment ? "yes" : "no"));
-        core.info("Existing comment id: " + (existingComment ? existingComment.id : "N/A"));
-        if (_.hasIn(config, "checks.title-validator")) {
+        core_1.default.info(`Existing comment found: ${existingComment ? "yes" : "no"}`);
+        core_1.default.info(`Existing comment id: ${existingComment ? existingComment.id : "N/A"}`);
+        if (config === null || config === void 0 ? void 0 : config["checks.title-validator"]) {
             const pullRequestTitle = payload.pull_request.title;
-            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, _.get(config, "checks.title-validator.matches"));
+            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, config["checks.title-validator.matches"]);
             if (!systemTest && !titleCheckState) {
-                core.setFailed("Pull Request Title Validation Failed");
-                core.summary.addHeading('Pull Request Title Validation Failed', '2');
-                core.summary.addEOL();
-                core.summary.addQuote(pullRequestTitle, 'Current PR Title');
-                core.summary.addEOL();
-                core.summary.addRaw(failureMessage, true);
+                core_1.default.setFailed("Pull Request Title Validation Failed");
+                core_1.default.summary.addHeading('Pull Request Title Validation Failed', '2');
+                core_1.default.summary.addEOL();
+                core_1.default.summary.addQuote(pullRequestTitle, 'Current PR Title');
+                core_1.default.summary.addEOL();
+                core_1.default.summary.addRaw(failureMessage, true);
                 if (jobSummaryOnFailure) {
-                    core.summary.write();
+                    core_1.default.summary.write();
                 }
                 if (commentOnFailure && !existingComment) {
-                    octokit.rest.issues.createComment(Object.assign(Object.assign({}, github.context.repo), {
-                        issue_number: payload.pull_request.number,
-                        body: core.summary.stringify(),
-                    }));
+                    octokit.rest.issues.createComment(Object.assign(Object.assign({}, github_1.default.context.repo), { issue_number: payload.pull_request.number, body: core_1.default.summary.stringify() }));
                 }
                 else if (commentOnFailure && existingComment) {
-                    core.info("Updating existing comment with id: " + existingComment.id);
-                    octokit.rest.issues.updateComment(Object.assign(Object.assign({}, github.context.repo), { comment_id: existingComment.id, body: core.summary.stringify() }));
+                    core_1.default.info(`Updating existing comment with id: ${existingComment.id}`);
+                    octokit.rest.issues.updateComment(Object.assign(Object.assign({}, github_1.default.context.repo), { comment_id: existingComment.id, body: core_1.default.summary.stringify() }));
                 }
             }
             else if (!systemTest && titleCheckState && existingComment) {
-                core.info("Title is valid. Deleting existing comment with id: " + existingComment.id);
-                octokit.rest.issues.deleteComment(Object.assign(Object.assign({}, github.context.repo), { comment_id: existingComment.id }));
+                core_1.default.info(`Title is valid. Deleting existing comment with id: ${existingComment.id}`);
+                octokit.rest.issues.deleteComment(Object.assign(Object.assign({}, github_1.default.context.repo), { comment_id: existingComment.id }));
             }
         }
     });
