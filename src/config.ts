@@ -1,7 +1,7 @@
 import * as github from "@actions/github";
 import { RequestError } from "@octokit/request-error";
 import * as yaml from "js-yaml";
-import { validateSchema } from "./validateSchema";
+import { validateConfig } from "./validateSchema";
 
 const CONFIG_FILE = ".github/pull-request-validator-config.yaml";
 
@@ -47,5 +47,5 @@ export async function getConfig(octokit) {
     path: CONFIG_FILE,
   });
   const yamlConfig = await loadYaml(octokit, params);
-  return validateSchema(yamlConfig);
+  return validateConfig(yamlConfig);
 }
