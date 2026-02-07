@@ -43,9 +43,10 @@ async function loadYaml(octokit, params) {
  * @async
  */
 export async function getConfig(octokit) {
-  const params = Object.assign(Object.assign({}, github.context.repo), {
+  const params = {
+    ...github.context.repo,
     path: CONFIG_FILE,
-  });
+  };
   const yamlConfig = await loadYaml(octokit, params);
   return validateConfig(yamlConfig);
 }
