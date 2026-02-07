@@ -21,15 +21,14 @@ const schema = Joi.object().keys({
   }),
 });
 
-export const validateSchema = (config) => {
-  const { error, value: validatedConfig } = schema.validate(config, {
+export const validateConfig = (config) => {
+  const validationResponse = schema.validate(config, {
     abortEarly: false,
-    allowUnknown: true,
   });
 
-  if (error) {
-    throw error;
+  if (validationResponse.error instanceof Joi.ValidationError) {
+    return validationResponse.error;
   }
 
-  return validatedConfig;
+  return validationResponse.value;
 };
