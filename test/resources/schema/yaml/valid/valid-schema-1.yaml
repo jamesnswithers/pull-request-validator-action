@@ -12,6 +12,5 @@ checks:
       - 'Match this'
       - 'And this'
     failure-message: 'Failed validation'
-
-  codeowner:
-    enforce-multiple: true
+    comment-on-failure: true
+    job-summary-on-failure: true

@@ -10,3 +10,5 @@ checks:
       - 'Match this'
       - 'And this'
     failure-message: 'Failed validation'
+    comment-on-failure: false
+    job-summary-on-failure: false
