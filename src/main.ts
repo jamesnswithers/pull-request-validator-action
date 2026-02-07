@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import core from "@actions/core";
 import github from "@actions/github";
 
@@ -34,21 +33,9 @@ async function run() {
   const octokit = github.getOctokit(githubToken);
   const config = await getConfig(octokit);
 
-  const commentOnFailure = _.get(
-    config,
-    "checks.title-validator.comment-on-failure",
-    true,
-  );
-  const jobSummaryOnFailure = _.get(
-    config,
-    "checks.title-validator.job-summary-on-failure",
-    false,
-  );
-  const failureMessage = _.get(
-    config,
-    "checks.title-validator.failure-message",
-    "Pull Request Title Validation Failed.",
-  );
+  const commentOnFailure = config["checks"]["title-validator"]["comment-on-failure"];
+  const jobSummaryOnFailure = config["checks"]["title-validator"]["job-summary-on-failure"];
+  const failureMessage = config["checks"]["title-validator"]["failure-message"];
 
   core.info(`The action is: ${action}`);
   core.info(`Is a system test: ${systemTest}`);
@@ -63,11 +50,11 @@ async function run() {
   core.info(`Existing comment found: ${ existingComment ? "yes" : "no" }`);
   core.info(`Existing comment id: ${ existingComment ? existingComment.id : "N/A" }`);
 
-  if (config?.["checks.title-validator"]) {
-    const pullRequestTitle = payload.pull_request.title;
+  if (config["checks"]["title-validator"]) {
+    const pullRequestTitle : string = payload.pull_request.title;
     const titleCheckState = isTitleValid(
       pullRequestTitle,
-      config["checks.title-validator.matches"],
+      config["checks"]["title-validator"]["matches"],
     );
     if (!systemTest && !titleCheckState) {
       core.setFailed("Pull Request Title Validation Failed");
