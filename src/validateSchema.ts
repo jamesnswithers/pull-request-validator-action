@@ -1,24 +1,22 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
-export const schema = Joi.object().keys({
-  checks: Joi.object().keys({
+const schema = Joi.object().keys({
+  "checks": Joi.object().keys({
     "title-fixer": Joi.object().keys({
       "enforce-check": Joi.boolean().default(false).strict(),
-      fixes: Joi.array().items(
+      "fixes": Joi.array().items(
         Joi.object().keys({
-          replace: Joi.string().required(),
-          with: Joi.string().allow("").required(),
+          "replace": Joi.string().required(),
+          "with": Joi.string().allow("").required(),
         }),
       ),
     }),
 
     "title-validator": Joi.object().keys({
-      matches: Joi.array().items(Joi.string()).single().default([]),
-      "failure-message": Joi.string().required(),
-    }),
-
-    codeowner: Joi.object().keys({
-      "enforce-multiple": Joi.boolean().default(false),
+      "matches": Joi.array().items(Joi.string()).single().required(),
+      "failure-message": Joi.string().default("Pull Request Title Validation Failed."),
+      "comment-on-failure": Joi.boolean().default(true),
+      "job-summary-on-failure": Joi.boolean().default(false),
     }),
   }),
 });
