@@ -1,4 +1,4 @@
-const validSchemas = [
+export const validSchemas = [
   ['valid-schema-1', {
     'checks': {
       'title-fixer': {
@@ -12,10 +12,9 @@ const validSchemas = [
         'matches': [
           'Match this', 'And this'
         ],
-        'failure-message': 'Failed validation'
-      },
-      'codeowner': {
-        'enforce-multiple': true
+        'failure-message': 'Failed validation',
+        'comment-on-failure': true,
+        'job-summary-on-failure': true,
       }
     }
   }],
@@ -31,7 +30,9 @@ const validSchemas = [
         'matches': [
           'Match this', 'And this'
         ],
-        'failure-message': 'Failed validation'
+        'failure-message': 'Failed validation',
+        'comment-on-failure': false,
+        'job-summary-on-failure': false,
       }
     }
   }],
@@ -41,18 +42,16 @@ const validSchemas = [
         'matches': [
           'Match this'
         ],
-        'failure-message': 'Failed validation'
+        'failure-message': 'Failed validation',
+        'comment-on-failure': true,
+        'job-summary-on-failure': false,
       }
     }
   }]
 ];
 
-module.exports.validSchemas = validSchemas;
-
-const invalidSchemas = [
+export const invalidSchemas = [
   ['invalid-schema-1', '"checks.title-fixer.enforce-check" must be a boolean'],
-  ['invalid-schema-2', '"checks.codeowner.force-multiple" is not allowed'],
-  ['invalid-schema-3', '"checks.title-validator.failure-message" is required']
+  ['invalid-schema-2', '"checks.some-check" is not allowed'],
+  ['invalid-schema-3', '"checks.title-validator.matches" must be a string']
 ];
-
-module.exports.invalidSchemas = invalidSchemas;
