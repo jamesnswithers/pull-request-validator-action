@@ -1,6 +1,6 @@
 {
   "name": "pull-request-validator-action",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha+1",
   "description": "Pull Request Validator GitHub Action",
   "main": "lib/main.js",
   "scripts": {
@@ -31,11 +31,15 @@
     "ts-jest": "^29.4.6"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.23",
     "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
     "jest": "^30.2.0",
     "prettier": "^3.8.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   }
 }
