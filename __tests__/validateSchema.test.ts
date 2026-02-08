@@ -4,8 +4,8 @@ import { validSchemas, invalidSchemas } from './resources/schema/object/validate
 import fs from 'fs';
 import yaml from 'js-yaml';
 
-const VALID_TEST_RESOURCES = 'test/resources/schema/yaml/valid';
-const INVALID_TEST_RESOURCES = 'test/resources/schema/yaml/invalid';
+const VALID_TEST_RESOURCES = '__tests__/resources/schema/yaml/valid';
+const INVALID_TEST_RESOURCES = '__tests__/resources/schema/yaml/invalid';
 
 describe('schema', () => {
   describe('valid', () => {

@@ -1,4 +1,4 @@
-import { validTitles, invalidTitles, titleMatchers } from '../test/resources/titles/testData';
+import { validTitles, invalidTitles, titleMatchers } from './resources/titles/testData';
 
 import { isTitleValid } from "../src/validateTitle";
 
