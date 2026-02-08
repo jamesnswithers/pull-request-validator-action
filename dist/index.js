@@ -92,11 +92,9 @@ function loadYaml(octokit, params) {
  */
 function getConfig(octokit) {
     return __awaiter(this, void 0, void 0, function* () {
-        const params = Object.assign(Object.assign({}, github.context.repo), {
-            path: CONFIG_FILE,
-        });
+        const params = Object.assign(Object.assign({}, github.context.repo), { path: CONFIG_FILE });
         const yamlConfig = yield loadYaml(octokit, params);
-        return (0, validateSchema_1.validateSchema)(yamlConfig);
+        return (0, validateSchema_1.validateConfig)(yamlConfig);
     });
 }
 
@@ -121,7 +119,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const lodash_1 = __importDefault(__nccwpck_require__(2356));
 const core_1 = __importDefault(__nccwpck_require__(7484));
 const github_1 = __importDefault(__nccwpck_require__(3228));
 const config_1 = __nccwpck_require__(6472);
@@ -145,9 +142,9 @@ function run() {
         const systemTest = core_1.default.getBooleanInput("system-test", { required: false });
         const octokit = github_1.default.getOctokit(githubToken);
         const config = yield (0, config_1.getConfig)(octokit);
-        const commentOnFailure = lodash_1.default.get(config, "checks.title-validator.comment-on-failure", true);
-        const jobSummaryOnFailure = lodash_1.default.get(config, "checks.title-validator.job-summary-on-failure", false);
-        const failureMessage = lodash_1.default.get(config, "checks.title-validator.failure-message", "Pull Request Title Validation Failed.");
+        const commentOnFailure = config["checks"]["title-validator"]["comment-on-failure"];
+        const jobSummaryOnFailure = config["checks"]["title-validator"]["job-summary-on-failure"];
+        const failureMessage = config["checks"]["title-validator"]["failure-message"];
         core_1.default.info(`The action is: ${action}`);
         core_1.default.info(`Is a system test: ${systemTest}`);
         const numberOfComments = payload.pull_request.comments;
@@ -156,9 +153,9 @@ function run() {
         const existingComment = comments.find((comment) => { var _a; return (_a = comment.body) === null || _a === void 0 ? void 0 : _a.includes("Pull Request Title Validation"); });
         core_1.default.info(`Existing comment found: ${existingComment ? "yes" : "no"}`);
         core_1.default.info(`Existing comment id: ${existingComment ? existingComment.id : "N/A"}`);
-        if (config === null || config === void 0 ? void 0 : config["checks.title-validator"]) {
+        if (config["checks"]["title-validator"]) {
             const pullRequestTitle = payload.pull_request.title;
-            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, config["checks.title-validator.matches"]);
+            const titleCheckState = (0, validateTitle_1.isTitleValid)(pullRequestTitle, config["checks"]["title-validator"]["matches"]);
             if (!systemTest && !titleCheckState) {
                 core_1.default.setFailed("Pull Request Title Validation Failed");
                 core_1.default.summary.addHeading('Pull Request Title Validation Failed', '2');
@@ -194,71 +191,39 @@ run();
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateSchema = exports.schema = void 0;
-const Joi = __importStar(__nccwpck_require__(1154));
-exports.schema = Joi.object().keys({
-    checks: Joi.object().keys({
-        "title-fixer": Joi.object().keys({
-            "enforce-check": Joi.boolean().default(false).strict(),
-            fixes: Joi.array().items(Joi.object().keys({
-                replace: Joi.string().required(),
-                with: Joi.string().allow("").required(),
+exports.validateConfig = void 0;
+const joi_1 = __importDefault(__nccwpck_require__(1154));
+const schema = joi_1.default.object().keys({
+    "checks": joi_1.default.object().keys({
+        "title-fixer": joi_1.default.object().keys({
+            "enforce-check": joi_1.default.boolean().default(false).strict(),
+            "fixes": joi_1.default.array().items(joi_1.default.object().keys({
+                "replace": joi_1.default.string().required(),
+                "with": joi_1.default.string().allow("").required(),
             })),
         }),
-        "title-validator": Joi.object().keys({
-            matches: Joi.array().items(Joi.string()).single().default([]),
-            "failure-message": Joi.string().required(),
-        }),
-        codeowner: Joi.object().keys({
-            "enforce-multiple": Joi.boolean().default(false),
+        "title-validator": joi_1.default.object().keys({
+            "matches": joi_1.default.array().items(joi_1.default.string()).single().required(),
+            "failure-message": joi_1.default.string().default("Pull Request Title Validation Failed."),
+            "comment-on-failure": joi_1.default.boolean().default(true),
+            "job-summary-on-failure": joi_1.default.boolean().default(false),
         }),
     }),
 });
-const validateSchema = (config) => {
-    const { error, value: validatedConfig } = exports.schema.validate(config, {
+const validateConfig = (config) => {
+    const validationResponse = schema.validate(config, {
         abortEarly: false,
-        allowUnknown: true,
     });
-    if (error) {
-        throw error;
+    if (validationResponse.error instanceof joi_1.default.ValidationError) {
+        return validationResponse.error;
     }
-    return validatedConfig;
+    return validationResponse.value;
 };
-exports.validateSchema = validateSchema;
+exports.validateConfig = validateConfig;
 
 
 /***/ }),
