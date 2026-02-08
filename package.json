@@ -4,10 +4,15 @@
   "description": "Pull Request Validator GitHub Action",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
-    "gh-compile": "ncc build lib/main.js --license licenses.txt",
+    "build": "npm run fix:format && npm run check && npm run build:compile && npm run build:package",
+    "build:compile": "tsc",
+    "build:package": "ncc build --source-map --no-source-map-register --license licenses.txt",
+    "check": "concurrently -n check: -c red,green,blue -g npm:check:*",
+    "check:build": "tsc --noEmit",
+    "check:format": "prettier --check .",
+    "check:lint": "eslint .",
     "test": "jest",
-    "format": "prettier --write src/*.ts"
+    "fix:format": "prettier --write src/*.ts"
   },
   "repository": {
     "type": "git",
