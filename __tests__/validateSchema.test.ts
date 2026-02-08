@@ -1,6 +1,6 @@
-import { ValidationError } from 'joi';
-import { validateConfig } from '../src/validateSchema';
-import { validSchemas, invalidSchemas } from './resources/schema/object/validateSchema';
+import {ValidationError} from 'joi';
+import {validateConfig} from '../src/validateSchema';
+import {validSchemas, invalidSchemas} from './resources/schema/object/validateSchema';
 import fs from 'fs';
 import yaml from 'js-yaml';
 

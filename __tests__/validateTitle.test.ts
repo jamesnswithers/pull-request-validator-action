@@ -1,25 +1,25 @@
-import { validTitles, invalidTitles, titleMatchers } from './resources/titles/testData';
+import {validTitles, invalidTitles, titleMatchers} from './resources/titles/testData';
 
-import { isTitleValid } from "../src/validateTitle";
+import {isTitleValid} from '../src/validateTitle';
 
 describe('title', () => {
   describe('valid', () => {
-    validTitles.forEach((validTitle) => {
+    validTitles.forEach(validTitle => {
       test(`${validTitle} is valid`, () => {
-        const titleCheck = isTitleValid(validTitle, titleMatchers)
+        const titleCheck = isTitleValid(validTitle, titleMatchers);
         expect(titleCheck).toBeTruthy();
       });
     });
   });
-})
+});
 
 describe('schema', () => {
   describe('invalid', () => {
-    invalidTitles.forEach((invalidTitle) => {
+    invalidTitles.forEach(invalidTitle => {
       test(`${invalidTitle} is invalid`, () => {
-        const titleCheck = isTitleValid(invalidTitle, titleMatchers)
+        const titleCheck = isTitleValid(invalidTitle, titleMatchers);
         expect(titleCheck).toBeFalsy();
       });
     });
   });
-})
+});
