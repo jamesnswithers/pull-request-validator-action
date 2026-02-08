@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:compile && npm run build:package",
     "build:compile": "tsc",
-    "build:package": "ncc build --source-map --no-source-map-register --license licenses.txt",
+    "build:package": "ncc build",
     "check": "concurrently -n check: -c red,green,blue -g npm:check:*",
     "check:build": "tsc --noEmit",
     "check:format": "prettier --check .",
