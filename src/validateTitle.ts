@@ -6,10 +6,10 @@
  * @returns {boolean} Whether the title is valid or not
  */
 export function isTitleValid(title: string, matches: string[]): boolean {
-  matches.forEach(function (match: string) {
+  for (let match of matches) {
     if (title.match(new RegExp(match, "g"))) {
       return true;
     }
-  });
+  };
   return false;
 }
