@@ -26,7 +26,7 @@
   "author": "James Withers",
   "homepage": "https://github.com/jamesnswithers/pull-request-validator-action#readme",
   "dependencies": {
-    "@actions/core": "^3.0.0",
+    "@actions/core": "^2.0.2",
     "@actions/github": "^7.0.0",
     "@vercel/ncc": "^0.38.4",
     "codeowners-api": "^2.0.0",
