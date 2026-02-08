@@ -21,7 +21,7 @@
   "author": "James Withers",
   "homepage": "https://github.com/jamesnswithers/pull-request-validator-action#readme",
   "dependencies": {
-    "@actions/core": "^2.0.2",
+    "@actions/core": "^3.0.0",
     "@actions/github": "^7.0.0",
     "@vercel/ncc": "^0.38.4",
     "codeowners-api": "^2.0.0",
@@ -34,10 +34,10 @@
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.23",
-    "@types/node": "^25.0.9",
+    "@types/node": "^25.2.1",
     "eslint": "^9.39.2",
     "jest": "^30.2.0",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0"
   }
