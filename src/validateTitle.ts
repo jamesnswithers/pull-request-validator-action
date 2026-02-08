@@ -7,9 +7,9 @@
  */
 export function isTitleValid(title: string, matches: string[]): boolean {
   for (const match of matches) {
-    if (title.match(new RegExp(match, "g"))) {
+    if (title.match(new RegExp(match, 'g'))) {
       return true;
     }
-  };
+  }
   return false;
 }

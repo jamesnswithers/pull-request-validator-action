@@ -1,9 +1,9 @@
-import * as github from "@actions/github";
-import { RequestError } from "@octokit/request-error";
-import * as yaml from "js-yaml";
-import { validateConfig } from "./validateSchema";
+import * as github from '@actions/github';
+import {RequestError} from '@octokit/request-error';
+import * as yaml from 'js-yaml';
+import {validateConfig} from './validateSchema';
 
-const CONFIG_FILE = ".github/pull-request-validator-config.yaml";
+const CONFIG_FILE = '.github/pull-request-validator-config.yaml';
 
 /**
  * Loads a file from GitHub
@@ -17,12 +17,10 @@ async function loadYaml(octokit, params) {
   try {
     const response = await octokit.rest.repos.getContent(params);
 
-    if (typeof response.data.content !== "string") {
+    if (typeof response.data.content !== 'string') {
       return;
     }
-    return (
-      yaml.load(Buffer.from(response.data.content, "base64").toString('utf-8')) || {}
-    );
+    return yaml.load(Buffer.from(response.data.content, 'base64').toString('utf-8')) || {};
   } catch (e) {
     if (e instanceof RequestError && e.status === 404) {
       return null;
@@ -45,7 +43,7 @@ async function loadYaml(octokit, params) {
 export async function getConfig(octokit) {
   const params = {
     ...github.context.repo,
-    path: CONFIG_FILE,
+    path: CONFIG_FILE
   };
   const yamlConfig = await loadYaml(octokit, params);
   return validateConfig(yamlConfig);
