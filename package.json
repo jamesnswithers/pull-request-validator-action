@@ -11,9 +11,9 @@
     "check:build": "tsc --noEmit",
     "check:format": "prettier --check .",
     "check:lint": "eslint .",
-    "format": "prettier --no-error-on-unmatched-pattern --config ./.prettierrc.json --write \"**/*.{ts,yml,yaml}\"",
+    "format": "prettier --no-error-on-unmatched-pattern --write \"**/*.{ts,yml,yaml}\"",
     "format:fix": "prettier --write src/*.ts",
-    "format-check": "prettier --no-error-on-unmatched-pattern --config ./.prettierrc.json --check \"**/*.{ts,yml,yaml}\"",
+    "format-check": "prettier --no-error-on-unmatched-pattern --check \"**/*.{ts,yml,yaml}\"",
     "lint": "eslint \"**/*.ts\"",
     "lint:fix": "eslint \"**/*.ts\" --fix",
     "test": "jest --coverage"
