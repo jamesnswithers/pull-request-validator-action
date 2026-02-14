@@ -1,13 +1,22 @@
 {
   "name": "pull-request-validator-action",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha+1",
   "description": "Pull Request Validator GitHub Action",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
-    "gh-compile": "ncc build lib/main.js --license licenses.txt",
-    "test": "jest",
-    "format": "prettier --write src/*.ts"
+    "build": "npm run build:compile && npm run build:package",
+    "build:compile": "tsc",
+    "build:package": "ncc build",
+    "check": "concurrently -n check: -c red,green,blue -g npm:check:*",
+    "check:build": "tsc --noEmit",
+    "check:format": "prettier --check .",
+    "check:lint": "eslint .",
+    "format": "prettier --no-error-on-unmatched-pattern --write \"**/*.{ts,yml,yaml}\"",
+    "format:fix": "prettier --write src/*.ts",
+    "format-check": "prettier --no-error-on-unmatched-pattern --check \"**/*.{ts,yml,yaml}\"",
+    "lint": "eslint \"**/*.ts\"",
+    "lint:fix": "eslint \"**/*.ts\" --fix",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -21,20 +30,25 @@
   "author": "James Withers",
   "homepage": "https://github.com/jamesnswithers/pull-request-validator-action#readme",
   "dependencies": {
-    "@actions/core": "^1.9.1",
-    "@actions/github": "^2.2.0",
-    "@hapi/joi": "^17.1.1",
-    "@vercel/ncc": "^0.29.1",
+    "@actions/core": "^2.0.2",
+    "@actions/github": "^7.0.0",
+    "@vercel/ncc": "^0.38.4",
     "codeowners-api": "^2.0.0",
-    "js-yaml": "^3.13.1",
-    "lodash": "^4.17.21"
+    "joi": "^18.0.2",
+    "js-yaml": "^4.1.1",
+    "ts-jest": "^29.4.6"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.2",
-    "@types/node": "^13.13.4",
-    "jest": "^26.0.1",
-    "prettier": "^2.0.5",
-    "ts-jest": "^25.5.1",
-    "typescript": "^3.8.3"
+    "@eslint/js": "^9.39.2",
+    "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.23",
+    "@types/node": "^25.2.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.2",
+    "jest": "^30.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   }
 }

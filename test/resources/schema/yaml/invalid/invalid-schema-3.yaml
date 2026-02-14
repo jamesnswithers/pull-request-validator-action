@@ -1,4 +1,0 @@
-checks:
-  title-validator:
-    matches:
-      - 'Match this'

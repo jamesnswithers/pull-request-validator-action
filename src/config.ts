@@ -1,28 +1,28 @@
 import * as github from '@actions/github';
-import * as core from '@actions/core';
+import {RequestError} from '@octokit/request-error';
 import * as yaml from 'js-yaml';
-import { validateSchema } from "./validateSchema";
+import {validateConfig} from './validateSchema';
 
 const CONFIG_FILE = '.github/pull-request-validator-config.yaml';
 
 /**
  * Loads a file from GitHub
  *
- * @param {object} gitHubClient An authenticated GitHub context
+ * @param {object} octokit An authenticated GitHub context
  * @param {object} params Params to fetch the file with
  * @returns {Promise<object>} The parsed YAML file
  * @async
  */
-async function loadYaml(gitHubClient, params) {
+async function loadYaml(octokit, params) {
   try {
-    const response = await gitHubClient.repos.getContents(params);
+    const response = await octokit.rest.repos.getContent(params);
 
     if (typeof response.data.content !== 'string') {
-      return
+      return;
     }
-    return yaml.safeLoad(Buffer.from(response.data.content, 'base64').toString()) || {}
+    return yaml.load(Buffer.from(response.data.content, 'base64').toString('utf-8')) || {};
   } catch (e) {
-    if (e.status === 404) {
+    if (e instanceof RequestError && e.status === 404) {
       return null;
     }
 
@@ -36,12 +36,15 @@ async function loadYaml(gitHubClient, params) {
  * If the config file does not exist in the context's repository, `null`
  * is returned.
  *
- * @param {object} gitHubClient An authenticated GitHub context
+ * @param {object} octokit An authenticated GitHub context
  * @returns {object} The merged configuration
  * @async
  */
-export async function getConfig(gitHubClient) {
-  const params = Object.assign(Object.assign({}, github.context.repo), { path: CONFIG_FILE })
-  const yamlConfig = await loadYaml(gitHubClient, params);
-  return validateSchema(yamlConfig);
+export async function getConfig(octokit) {
+  const params = {
+    ...github.context.repo,
+    path: CONFIG_FILE
+  };
+  const yamlConfig = await loadYaml(octokit, params);
+  return validateConfig(yamlConfig);
 }

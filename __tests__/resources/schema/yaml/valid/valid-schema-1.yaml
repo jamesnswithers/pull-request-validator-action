@@ -4,9 +4,13 @@ checks:
     fixes:
       - replace: 'Replace this'
         with: 'With this'
+      - replace: 'Replace this'
+        with: 'With this'
 
   title-validator:
     matches:
       - 'Match this'
       - 'And this'
     failure-message: 'Failed validation'
+    comment-on-failure: true
+    job-summary-on-failure: true

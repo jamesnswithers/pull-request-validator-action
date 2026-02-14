@@ -5,13 +5,13 @@ It can be used to block merges targeting protected branches when the Pull Reques
 
 ```
 name: Pull Request Validation Workflow
- 
+
  on:
    pull_request:
      branches:
        - master
      types: ['opened', 'edited', 'reopened', 'synchronize']
- 
+
  jobs:
    pull_request_validator:
      runs-on: ubuntu-latest
@@ -22,6 +22,7 @@ name: Pull Request Validation Workflow
 ```
 
 Configuration file named pull-request-validator-config.yaml placed in the default branch.
+
 ```
 checks:
   title-validator:
