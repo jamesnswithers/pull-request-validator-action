@@ -27,8 +27,9 @@ jobs:
     uses: actions/reusable-workflows/.github/workflows/check-dist.yml@main
     with:
       node-version: '24.x'
-  build:
+  test:
     runs-on: ubuntu-slim
+    name: Test
     steps:
     - uses: actions/checkout@v6
     - name: setup node
